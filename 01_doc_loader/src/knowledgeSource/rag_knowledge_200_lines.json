@@ -1,0 +1,200 @@
+[
+  {
+    "id": "RAG-001",
+    "topic": "Retrieval-Augmented Generation",
+    "definition": "RAG combines information retrieval with text generation so a language model can answer using relevant external knowledge.",
+    "purpose": "Ground answers in a knowledge source and reduce unsupported claims.",
+    "workflow_stage": "overview",
+    "example": "A support assistant retrieves policy passages before answering a customer.",
+    "best_practice": "Keep retrieval and generation as separately testable stages."
+  },
+  {
+    "id": "RAG-002",
+    "topic": "Knowledge base",
+    "definition": "A knowledge base is the collection of documents or records from which relevant context is retrieved.",
+    "purpose": "Provide domain-specific information that may be absent from model training.",
+    "workflow_stage": "ingestion",
+    "example": "Product manuals, FAQs, and troubleshooting guides form a support knowledge base.",
+    "best_practice": "Use authoritative, current, and permission-appropriate sources."
+  },
+  {
+    "id": "RAG-003",
+    "topic": "Document ingestion",
+    "definition": "Ingestion is the process of loading source content and preparing it for indexing.",
+    "purpose": "Convert scattered files and records into searchable material.",
+    "workflow_stage": "ingestion",
+    "example": "A pipeline extracts text from PDF files and stores document metadata.",
+    "best_practice": "Make ingestion repeatable and record failures for review."
+  },
+  {
+    "id": "RAG-004",
+    "topic": "Text extraction",
+    "definition": "Text extraction converts source files into machine-readable text while attempting to preserve useful structure.",
+    "purpose": "Make content available for cleaning, chunking, and indexing.",
+    "workflow_stage": "ingestion",
+    "example": "A PDF parser extracts headings, paragraphs, and table text.",
+    "best_practice": "Check extraction quality, especially for scanned documents and tables."
+  },
+  {
+    "id": "RAG-005",
+    "topic": "OCR",
+    "definition": "Optical character recognition converts text contained in images or scanned pages into machine-readable characters.",
+    "purpose": "Include scanned documents in a text retrieval pipeline.",
+    "workflow_stage": "ingestion",
+    "example": "OCR reads text from a scanned invoice image.",
+    "best_practice": "Validate OCR output because recognition errors can change meaning."
+  },
+  {
+    "id": "RAG-006",
+    "topic": "Text cleaning",
+    "definition": "Text cleaning removes extraction artifacts and normalizes content without changing its meaning.",
+    "purpose": "Improve consistency before splitting and indexing documents.",
+    "workflow_stage": "preprocessing",
+    "example": "A cleaner removes repeated page headers and repairs broken line wraps.",
+    "best_practice": "Avoid deleting meaningful symbols, section numbers, or code."
+  },
+  {
+    "id": "RAG-007",
+    "topic": "Chunking",
+    "definition": "Chunking divides long documents into smaller passages that can be embedded and retrieved independently.",
+    "purpose": "Make retrieval focused and keep context within model limits.",
+    "workflow_stage": "preprocessing",
+    "example": "A handbook is split into passages of roughly 500 tokens.",
+    "best_practice": "Choose chunk size based on document structure and evaluation results."
+  },
+  {
+    "id": "RAG-008",
+    "topic": "Chunk overlap",
+    "definition": "Chunk overlap repeats a small amount of text between neighboring chunks.",
+    "purpose": "Preserve context when a relevant idea crosses a chunk boundary.",
+    "workflow_stage": "preprocessing",
+    "example": "Adjacent chunks share 50 tokens so a split sentence remains understandable.",
+    "best_practice": "Use enough overlap to preserve continuity without creating excessive duplication."
+  },
+  {
+    "id": "RAG-009",
+    "topic": "Metadata",
+    "definition": "Metadata is descriptive information stored alongside each chunk, such as source, title, date, or access level.",
+    "purpose": "Support filtering, citations, freshness checks, and access control.",
+    "workflow_stage": "indexing",
+    "example": "A chunk stores its document ID, page number, department, and publication date.",
+    "best_practice": "Keep metadata consistent and validate it during ingestion."
+  },
+  {
+    "id": "RAG-010",
+    "topic": "Embedding",
+    "definition": "An embedding is a numeric vector representing semantic features of text.",
+    "purpose": "Enable similarity-based matching between a query and stored passages.",
+    "workflow_stage": "indexing",
+    "example": "An embedding model converts a paragraph into a vector of numbers.",
+    "best_practice": "Use the same compatible embedding model for indexing and querying."
+  },
+  {
+    "id": "RAG-011",
+    "topic": "Vector database",
+    "definition": "A vector database stores embeddings and supports similarity search over them.",
+    "purpose": "Retrieve passages whose meanings are close to a query.",
+    "workflow_stage": "indexing",
+    "example": "A vector store indexes document embeddings for semantic retrieval.",
+    "best_practice": "Plan for metadata filters, backups, updates, and access controls."
+  },
+  {
+    "id": "RAG-012",
+    "topic": "Semantic search",
+    "definition": "Semantic search finds content based on meaning rather than requiring exact keyword matches.",
+    "purpose": "Retrieve relevant passages even when the query uses different wording.",
+    "workflow_stage": "retrieval",
+    "example": "A query about cancelling a plan can retrieve a passage titled subscription termination.",
+    "best_practice": "Evaluate semantic relevance with representative user questions."
+  },
+  {
+    "id": "RAG-013",
+    "topic": "Keyword search",
+    "definition": "Keyword search matches query terms against indexed text using lexical search methods.",
+    "purpose": "Find exact names, identifiers, phrases, and terminology.",
+    "workflow_stage": "retrieval",
+    "example": "Searching for an error code returns passages containing that exact code.",
+    "best_practice": "Use lexical search when exact terms are important."
+  },
+  {
+    "id": "RAG-014",
+    "topic": "Hybrid search",
+    "definition": "Hybrid search combines semantic retrieval with keyword-based retrieval.",
+    "purpose": "Balance conceptual matching with exact-term matching.",
+    "workflow_stage": "retrieval",
+    "example": "A search combines vector similarity and BM25 results.",
+    "best_practice": "Tune the combination using a labeled retrieval test set."
+  },
+  {
+    "id": "RAG-015",
+    "topic": "Top-k retrieval",
+    "definition": "Top-k retrieval returns the k highest-ranked candidate passages for a query.",
+    "purpose": "Control how many candidate chunks are passed to later stages.",
+    "workflow_stage": "retrieval",
+    "example": "The retriever returns the five most relevant passages.",
+    "best_practice": "Tune k against answer quality, latency, and context limits."
+  },
+  {
+    "id": "RAG-016",
+    "topic": "Reranking",
+    "definition": "Reranking applies a second relevance model to reorder retrieved candidates.",
+    "purpose": "Improve the quality of the final context supplied to the generator.",
+    "workflow_stage": "retrieval",
+    "example": "A cross-encoder reranks the top 20 passages and selects the best five.",
+    "best_practice": "Measure whether reranking improves relevance enough to justify its cost."
+  },
+  {
+    "id": "RAG-017",
+    "topic": "Query rewriting",
+    "definition": "Query rewriting transforms a user's question into a clearer search query while preserving intent.",
+    "purpose": "Improve retrieval for vague, conversational, or multi-part questions.",
+    "workflow_stage": "query processing",
+    "example": "The question 'What about its limits?' is rewritten using conversation context.",
+    "best_practice": "Do not introduce assumptions that the user did not express."
+  },
+  {
+    "id": "RAG-018",
+    "topic": "Context assembly",
+    "definition": "Context assembly selects and arranges retrieved passages for the language model.",
+    "purpose": "Provide concise, relevant, and traceable evidence for generation.",
+    "workflow_stage": "generation",
+    "example": "The prompt includes three passages with source titles and page numbers.",
+    "best_practice": "Remove duplicates and respect the model's context window."
+  },
+  {
+    "id": "RAG-019",
+    "topic": "Grounded generation",
+    "definition": "Grounded generation instructs a model to answer using supplied evidence and acknowledge missing information.",
+    "purpose": "Reduce unsupported statements and make answers evidence-based.",
+    "workflow_stage": "generation",
+    "example": "The model answers from retrieved policy text and says when the policy is silent.",
+    "best_practice": "Require clear separation between evidence and inference."
+  },
+  {
+    "id": "RAG-020",
+    "topic": "Citations",
+    "definition": "Citations connect generated claims to the source passages that support them.",
+    "purpose": "Let readers verify answers and trace information to its origin.",
+    "workflow_stage": "generation",
+    "example": "An answer links a policy statement to its document and page.",
+    "best_practice": "Generate citations from stored source metadata, not invented references."
+  },
+  {
+    "id": "RAG-021",
+    "topic": "Evaluation",
+    "definition": "RAG evaluation measures retrieval quality and the faithfulness and usefulness of generated answers.",
+    "purpose": "Identify weak stages and compare pipeline changes objectively.",
+    "workflow_stage": "evaluation",
+    "example": "A test set measures recall at k, answer relevance, and faithfulness.",
+    "best_practice": "Evaluate retrieval and generation separately as well as end to end."
+  },
+  {
+    "id": "RAG-022",
+    "topic": "Access control",
+    "definition": "RAG access control ensures users retrieve only content they are authorized to see.",
+    "purpose": "Prevent private or restricted documents from leaking through retrieval.",
+    "workflow_stage": "security",
+    "example": "A department filter limits search results to documents the signed-in user may access.",
+    "best_practice": "Enforce permissions before context reaches the language model."
+  }
+]
