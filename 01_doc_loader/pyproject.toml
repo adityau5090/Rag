@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.12,<3.14"
 dependencies = [
+    "jq>=1.13.0",
     "langchain-community>=0.4.2",
     "onnxruntime>=1.31.1",
     "pdfminer-six>=20260107",
